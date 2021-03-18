@@ -7,7 +7,7 @@
 
 RED='\033[0;31m'          # Red
 GREEN='\033[0;32m'        # Green
-YELLOW='\033[1;33m'
+YELLOW='\033[1;33m'       # Yellow
 NC='\033[0m'              # No Color
 
 # clusterName=<clusterName>
