@@ -14,14 +14,16 @@ NC='\033[0m'              # No Color
 # resourceGroup=<clusterResourceGroupName>
 # subscriptionId=<notUsed>
 
+# initialise variables from ARM
+
 kubeletIdentity=$(az aks show -n $clusterName -g $resourceGroup --query identityProfile.kubeletidentity.clientId -o tsv)
 nodePools=$(az aks nodepool list -o tsv --cluster-name $clusterName -g $resourceGroup)
 nodeResourceGroup=$(az aks show -o tsv -n $clusterName -g $resourceGroup --query nodeResourceGroup)
 scalesets=$(az vmss list -o tsv --query "[].name" -g $nodeResourceGroup)
 
-# Iterate through VMSSes in the Infrastructure Resource Group of AKS cluster
-
 printf "${YELLOW}\n** Checking AKS cluster $clusterName in Resource Group $resourceGroup for kubelet MSI assignment issues **\n\n${NC}"
+
+# Iterate through VMSSes in the Infrastructure Resource Group of AKS cluster
 
 while read -r scaleset
 do
@@ -30,7 +32,6 @@ do
     # Set found boolean to false
 
     identityFound=0
-
     
     printf -- "---------------------------------------------------------------\n"
     printf "vmss name: $scaleset\n"
@@ -42,6 +43,8 @@ do
     do
         printf "identity: $identity\n"
 
+        # Check whether current identity in array matches the kubelet identity
+
         if [[ "$identity" == "$kubeletIdentity" ]]
         then 
             identityFound=1
@@ -50,6 +53,8 @@ do
     done <<<$identities
 
     printf -- "---------------------------------------------------------------\n\n"
+
+    # Output summary per VMSS
 
     if [ $identityFound -eq 1 ]
     then
