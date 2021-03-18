@@ -1,16 +1,17 @@
+# Bash script to check that the kubelet identity of the AKS cluster is assigned to all node pools (prevent image pull failures from ACR, etc.)
+
 RED='\033[0;31m'          # Red
 GREEN='\033[0;32m'        # Green
 NC='\033[0m'              # No Color
 
-clusterName=msicluster
-resourceGroup=aks-msicluster
-subscriptionId=
+clusterName=<clusterName>
+resourceGroup=<clusterResourceGroupName>
+# subscriptionId=<notUsed>
 
 kubeletIdentity=$(az aks show -n $clusterName -g $resourceGroup --query identityProfile.kubeletidentity.clientId -o tsv)
 nodePools=$(az aks nodepool list -o tsv --cluster-name $clusterName -g $resourceGroup)
 nodeResourceGroup=$(az aks show -o tsv -n $clusterName -g $resourceGroup --query nodeResourceGroup)
 scalesets=$(az vmss list -o tsv --query "[].name" -g $nodeResourceGroup)
-# az vmss show -n aks-nodepool1-14135066-vmss -g aks-msicluster-res --query "identity.userAssignedIdentities.*.clientId" -o tsv
 
 # Iterate through VMSSes in the Infrastructure Resource Group of AKS cluster
 
