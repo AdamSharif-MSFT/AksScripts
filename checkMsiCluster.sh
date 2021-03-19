@@ -16,6 +16,8 @@ NC='\033[0m'              # No Color
 
 # initialise variables from ARM
 
+printf "${YELLOW}\n** Retrieving cluster details from ARM **\n\n${NC}"
+
 kubeletIdentity=$(az aks show -n $clusterName -g $resourceGroup --query identityProfile.kubeletidentity.clientId -o tsv)
 nodePools=$(az aks nodepool list -o tsv --cluster-name $clusterName -g $resourceGroup)
 nodeResourceGroup=$(az aks show -o tsv -n $clusterName -g $resourceGroup --query nodeResourceGroup)
