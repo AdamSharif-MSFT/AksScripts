@@ -1,6 +1,9 @@
 #!/bin/bash
 
 # Usage: ./startClusterVMSS.sh -n <clusterName> -g <resourceGroup> [-r (to restart cluster)]
+# Requires: Azure CLI, jq
+# Azure CLI: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli
+# jq: https://stedolan.github.io/jq/
 
 clusterName=""
 resourceGroup=""
